@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Cadastro de Mercadinho</title>
+    </h:head>
+    <h:body>
+
+        <p:growl id="gro" life="4000" sticky="false"/>
+
+        <h:form id="formCadMercadinho">
+
+            <p:fieldset legend="Cadastro de Mercadinho">
+                <h:panelGrid columns="2" cellpadding="10">
+
+                    <h:outputText value="Nome:"/>
+                    <h:inputText value="#{mercadinhoController.mercadinhoCadastro.nome}" required="true" requiredMessage="O campo nome é obrigatório"/>
+                    <p:message for="txtNome"/>
+
+                    <h:outputText value="Login:"/>
+                    <h:inputText id="txtLogin" value="#{mercadinhoController.mercadinhoCadastro.login}" required="true" requiredMessage="O campo login é obrigatório"/>
+                    <p:message for="txtLogin"/>
+
+                    <h:outputText value="Senha:"/>
+                    <p:password id="pswSenha" value="#{mercadinhoController.mercadinhoCadastro.senha}" required="true" requiredMessage="O campo senha é obrigatório"/>
+                    <p:message for="pswSenha"/>
+
+                    <h:outputText value="Confirma Senha:"/>
+                    <p:password id="pswConfirma" value="#{confirma}" required="true" requiredMessage="O campo confirma senha é obrigatório"/>
+                    <p:message for="pswConfirma"/>
+
+                    <h:outputText value="CNPJ:"/>
+                    <h:inputText value="#{mercadinhoController.mercadinhoCadastro.cnpj}" required="true" requiredMessage="O campo CNPJ é obrigatório"/>
+                    <p:message for="txtCnpj"/>
+
+                    <h:outputText value="Endereço:"/>
+                    <h:inputText value="#{mercadinhoController.mercadinhoCadastro.endereco}" required="true" requiredMessage="O campo endereço é obrigatório"/>
+                    <p:message for="txtEndereco"/>
+
+                    <h:outputText value="Contato:"/>
+                    <h:inputText value="#{mercadinhoController.mercadinhoCadastro.contato}" required="true" requiredMessage="O campo contato é obrigatório"/>
+                    <p:message for="txtContato"/>
+                </h:panelGrid>
+
+                <p:commandButton value="Cadastrar" action="#{mercadinhoController.inserir(confirma)}" update=":gro :formCadMercadinho"/>
+                <h:commandButton value="Cancelar"/>
+            </p:fieldset>
+
+            <p:dialog id="dialCadMercadinho"  
+                      modal="true" visible="false" showEffect="fade" hideEffect="fade"
+                      widgetVar="widDialCadMercadinho">
+                <h:outputText value="Deseja realmente cadastrar o mercadinho?"/><br/>
+                <p:commandButton value="Sim" action="#{mercadinhoController.inserir(confirma)}"
+                                 oncomplete="PF('widDialCadMercadinho').hide();"
+                                 update=":gro :formCadMercadinho"/>
+                <p:commandButton value="Não" oncomplete="PF('widDialCadMercadinho').hide()"/>
+            </p:dialog>
+
+        </h:form>
+
+        <p:messages id="msgs"/>
+    </h:body>
+</html>

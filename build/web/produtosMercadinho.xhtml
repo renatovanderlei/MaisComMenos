@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>Produtos</title>
+    </h:head>
+    <h:body>
+        <ui:include src="menuMercadinho.xhtml" />
+        <h:form id="formLotes">
+            <p:panelGrid columns="1" styleClass="ui-widget-content">
+                <!-- Botão para abrir o diálogo de cadastro -->
+                <p:commandButton value="Cadastrar Produto" 
+                                 onclick="PF('dlgCadastro').show()" 
+                                 styleClass="ui-button-success"/>
+
+                <!-- Tabela de produtos -->
+                <p:dataTable id="dataTableLotes" value="#{produtoController.lotesProdutos}" var="l" styleClass="ui-datatable">
+                    <p:column headerText="Produto">
+                        <h:outputText value="#{l.nomeProduto}" />
+                    </p:column>
+                    <p:column headerText="Marca">
+                        <h:outputText value="#{l.marca}" />
+                    </p:column>
+                    <p:column headerText="Lote">
+                        <h:outputText value="#{l.lote}" />
+                    </p:column>
+                    <p:column headerText="Preço Inicial">
+                        <h:outputText value="#{l.precoInicial}" />
+                    </p:column>
+                    <p:column headerText="Validade">
+                        <h:outputText value="#{l.validade}" />
+                    </p:column>
+                    <p:column headerText="Preço Final">
+                        <h:outputText value="#{l.precoFinal}" />
+                    </p:column>
+                    <p:column>
+                        <!-- Botão para editar um produto -->
+                        <p:commandButton value="Editar" 
+                                         action="#{produtoController.setLoteProdutoSelecionado(l)}" 
+                                         update=":formLotes:panelCadastro" />
+                        <!-- Botão para deletar um produto -->
+                        <p:commandButton value="Deletar" 
+                                         action="#{produtoController.deletar()}" 
+                                         update=":formLotes:dataTableLotes"
+                                         oncomplete="PF('dlgCadastro').hide()" />
+                    </p:column>
+                </p:dataTable>
+            </p:panelGrid>
+
+            <!-- Diálogo de cadastro de lote de produto -->
+            <p:dialog header="Cadastro de Lote de Produto" widgetVar="dlgCadastro" modal="true" id="panelCadastro">
+                <h:panelGrid columns="2" cellpadding="10">
+                    <h:outputText value="Nome do Produto:" />
+                    <p:inputText value="#{produtoController.loteProdutoCadastro.nomeProduto}" required="true" />
+
+                    <h:outputText value="Marca:" />
+                    <p:inputText value="#{produtoController.loteProdutoCadastro.marca}" required="true" />
+
+                    <h:outputText value="Lote:" />
+                    <p:inputText value="#{produtoController.loteProdutoCadastro.lote}" required="true" />
+
+                    <h:outputText value="Preço Inicial:" />
+                    <p:inputMask mask="99.99" value="#{produtoController.loteProdutoCadastro.precoInicial}" required="true" />
+
+                    <h:outputText value="Validade:" />
+                    <p:inputText type="date" value="#{produtoController.loteProdutoCadastro.validade}" required="true" />
+
+                    <h:outputText value="Preço Final:" />
+                    <p:inputMask mask="99.99" value="#{produtoController.loteProdutoCadastro.precoFinal}" required="true" />
+
+                    <!-- Botões de salvar e cancelar -->
+                    <p:commandButton value="Salvar" 
+                                     action="#{produtoController.inserir()}" 
+                                     update=":formLotes:dataTableLotes"
+                                     oncomplete="PF('dlgCadastro').hide()" />
+                    <p:commandButton value="Cancelar" 
+                                     onclick="PF('dlgCadastro').hide()" />
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>
