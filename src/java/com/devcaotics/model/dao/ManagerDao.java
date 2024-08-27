@@ -3,7 +3,7 @@ package com.devcaotics.model.dao;
 import com.devcaotics.model.negocio.Mercadinho;
 import com.devcaotics.model.negocio.ONG;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.util.HashMap;
@@ -14,10 +14,10 @@ public class ManagerDao {
 
     private static ManagerDao myself = null;
 
-    private EntityManager manager;
+    private EntityManagerFactory manager =null;
 
     private ManagerDao() {
-        this.manager = Persistence.createEntityManagerFactory("menoscommaisPU").createEntityManager();
+        this.manager = Persistence.createEntityManagerFactory("menoscommaisPU");
     }
 
     public static ManagerDao getCurrentInstance() {
@@ -28,52 +28,69 @@ public class ManagerDao {
     }
 
     public void insert(Object o) {
-        EntityTransaction transaction = manager.getTransaction();
+        EntityManager em = manager.createEntityManager();
         try {
-            transaction.begin();
-            manager.persist(o);
-            transaction.commit();
+            em.getTransaction().begin();
+            em.persist(o);
+            em.flush();
+            em.getTransaction().commit();
+            
         } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw e;
         }
+            em.close();
     }
 
     public <T> T readById(int id, Class<T> clazz) {
-        return manager.find(clazz, id);
+        EntityManager em = manager.createEntityManager();
+        return em.find(clazz, id);
     }
 
     public <T> List<T> readAll(String jpql, Class<T> clazz) {
-        Query query = manager.createQuery(jpql, clazz);
+        EntityManager em = manager.createEntityManager();
+        Query query = em.createQuery(jpql, clazz);
         return query.getResultList();
+    }
+    
+    public List readProdutosByMercadinho(String query,Class c){
+        
+        EntityManager em = manager.createEntityManager();
+        
+        List returnedList = em.createQuery(query,c).getResultList();
+        
+        em.close();
+        
+        return returnedList;
     }
 
     public void update(Object o) {
-        EntityTransaction transaction = manager.getTransaction();
+        EntityManager em = manager.createEntityManager();
         try {
-            transaction.begin();
-            manager.merge(o);
-            transaction.commit();
+            em.getTransaction().begin();
+            em.merge(o);
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw e;
         }
     }
 
     public void delete(Object o) {
-        EntityTransaction transaction = manager.getTransaction();
+        EntityManager em = manager.createEntityManager();
         try {
-            transaction.begin();
-            manager.remove(manager.contains(o) ? o : manager.merge(o));
-            transaction.commit();
+            em.getTransaction().begin();
+            em.remove(em.contains(o) ? o : em.merge(o));
+            em.getTransaction().commit();
         } catch (Exception e) {
-            if (transaction.isActive()) transaction.rollback();
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw e;
         }
     }
     
     public <T> List<T> readWithParameters(String jpql, Class<T> clazz, Map<String, Object> parameters) {
-        Query query = manager.createQuery(jpql, clazz);
+        EntityManager em = manager.createEntityManager();
+        Query query = em.createQuery(jpql, clazz);
         
         // Adiciona os parâmetros à consulta
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {

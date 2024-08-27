@@ -4,6 +4,7 @@ import com.devcaotics.model.dao.ManagerDao;
 import com.devcaotics.model.negocio.LoteProduto;
 import com.devcaotics.model.negocio.Mercadinho;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 @ManagedBean
 @SessionScoped
@@ -30,9 +32,10 @@ public class ProdutoController implements Serializable {
     }
 
     private Mercadinho getMercadinhoLogado() {
-        Mercadinho mercadinho = (Mercadinho) FacesContext.getCurrentInstance()
-                .getExternalContext().getSessionMap().get("mercadinhoLogado");
-
+        
+        Mercadinho mercadinho = ((LoginController) ((HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+                .getSession(true)).getAttribute("loginController")).getMercadinhoLogado();
+        
         if (mercadinho == null) {
             throw new IllegalStateException("Nenhum mercadinho logado encontrado na sessão.");
         }
@@ -40,13 +43,18 @@ public class ProdutoController implements Serializable {
     }
 
     public List<LoteProduto> carregarLotesProdutos() {
-        Mercadinho mercadinhoLogado = getMercadinhoLogado();
-        if (mercadinhoLogado == null) {
+        Mercadinho mercadinho = ((LoginController) ((HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+                .getSession(true)).getAttribute("loginController")).getMercadinhoLogado();
+        
+        if (mercadinho == null) {
+            throw new IllegalStateException("Nenhum mercadinho logado encontrado na sessão.");
+        }
+        if (mercadinho == null) {
             return Collections.emptyList();
         }
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("id", mercadinhoLogado.getId());
+        parameters.put("id", mercadinho.getId());
 
         return ManagerDao.getCurrentInstance()
                 .readWithParameters("select l from LoteProduto l where l.mercadinho.id = :id", LoteProduto.class, parameters);
@@ -54,6 +62,8 @@ public class ProdutoController implements Serializable {
 
     public void inserir() {
         try {
+            Mercadinho mercadinho = ((LoginController) ((HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+                .getSession(true)).getAttribute("loginController")).getMercadinhoLogado();
             loteProdutoCadastro.setMercadinho(getMercadinhoLogado());
             ManagerDao.getCurrentInstance().insert(loteProdutoCadastro);
             lotesProdutos = carregarLotesProdutos();
@@ -84,9 +94,32 @@ public class ProdutoController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao deletar produto."));
         }
     }
+    
+    public List<LoteProduto> readProdutoByMercadinho(LoginController loginController) {
+
+        //List<LoteProduto> produtos = new ArrayList();
+        lotesProdutos = ManagerDao.getCurrentInstance().readProdutosByMercadinho("select p from LoteProduto p where p.mercadinho="+loginController.getMercadinhoLogado().getId(),LoteProduto.class);
+                                                                                
+        return lotesProdutos;
+
+    }
 
     public void setLoteProdutoSelecionado(LoteProduto loteProdutoSelecionado) {
         this.loteProdutoSelecionado = loteProdutoSelecionado;
+    }
+    
+    public LoteProduto setarLote(LoteProduto codigo) {
+        LoteProduto p = new LoteProduto();
+        List<LoteProduto> pets = carregarLotesProdutos();
+        for (LoteProduto pAux : pets) {
+            if (pAux.getId()== codigo.getId()) {
+                p = pAux;
+                this.loteProdutoSelecionado = p;
+            }
+        }
+
+        System.out.println("setou pet atual " + loteProdutoSelecionado.getNomeProduto());
+        return p;
     }
 
     // Getters e Setters

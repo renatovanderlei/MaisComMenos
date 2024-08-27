@@ -1,37 +1,75 @@
 package com.devcaotics.controllers;
 
 import com.devcaotics.model.dao.ManagerDao;
+import com.devcaotics.model.negocio.LoteProduto;
 import com.devcaotics.model.negocio.Mercadinho;
 import com.devcaotics.model.negocio.ONG;
-import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.util.ArrayList;
+import java.util.List;
 
 @ManagedBean
 @SessionScoped
 public class LoginController {
+
+    private static LoginController myself = null;
+
+    public static LoginController getCurrentInstance() {
+        if (myself == null)
+            myself = new LoginController();
+        return myself;
+    }
+
+    private List<LoteProduto> lotes = new ArrayList<>();
     
-    private String login;
-    private String senha;
     private Mercadinho mercadinhoLogado;
     private ONG ongLogada;
+    private String login;
+    private String senha;
 
-    public String getLogin() {
-        return login;
+    public String realizarLoginMercadinho() {
+        try {
+            // Assuming you are only dealing with Mercadinho for now
+            Mercadinho mLogin = (Mercadinho) ManagerDao.getCurrentInstance()
+                    .readAll("select m from Mercadinho m where m.login = '" + login
+                            + "' and m.senha = '" + senha + "'", Mercadinho.class).get(0);
+            this.mercadinhoLogado = mLogin;
+            return "indexMercadinho";
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance()
+                    .addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                    "Erro ao Logar", "Login e/ou senha estão incorretos"));
+            return null;
+        }
+    }
+    
+    public String realizarLoginOng() {
+        try {
+            // Assuming you are only dealing with Mercadinho for now
+            ONG oLogin = (ONG) ManagerDao.getCurrentInstance()
+                    .readAll("select o from ONG o where o.login = '" + login
+                            + "' and o.senha = '" + senha + "'", ONG.class).get(0);
+            this.ongLogada = oLogin;
+            return "indexOng";
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance()
+                    .addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                    "Erro ao Logar", "Login e/ou senha estão incorretos"));
+            return null;
+        }
     }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public String logout() {
+        this.mercadinhoLogado = null;
+        this.ongLogada = null;
+        return "index";
     }
 
     public Mercadinho getMercadinhoLogado() {
@@ -50,34 +88,19 @@ public class LoginController {
         this.ongLogada = ongLogada;
     }
 
-    public String realizarLogin() {
-        // Lógica de autenticação para Mercadinho
-        List<Mercadinho> mercadinhos = ManagerDao.getCurrentInstance()
-                .autenticarMercadinho(login, senha);
-
-        if (!mercadinhos.isEmpty()) {
-            mercadinhoLogado = mercadinhos.get(0);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("mercadinhoLogado", mercadinhoLogado);
-            return "indexMercadinho.xhtml";
-        }
-
-        // Lógica de autenticação para ONG
-        List<ONG> ongs = ManagerDao.getCurrentInstance()
-                .autenticarONG(login, senha);
-
-        if (!ongs.isEmpty()) {
-            ongLogada = ongs.get(0);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("ongLogada", ongLogada);
-            return "indexOng.xhtml";
-        }
-
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ou senha inválidos!", "Tente novamente."));
-        return null;
+    public String getLogin() {
+        return login;
     }
 
-    public String logout() {
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "login.xhtml";
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

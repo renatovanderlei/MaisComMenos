@@ -92,6 +92,10 @@ public class LoteProduto {
     public void setPrecoInicial(Double precoInicial) {
         this.precoInicial = precoInicial;
     }
+    
+    public String getPrecoInicialFormatado(){
+        return String.format("R$%.2f", this.precoInicial);
+    }
 
     public Date getValidade() {
         return validade;
@@ -103,6 +107,10 @@ public class LoteProduto {
 
     public Double getPrecoFinal() {
         return precoFinal;
+    }
+    
+    public String getPrecoFinalFormatado(){
+        return String.format("R$%.2f", this.precoFinal);
     }
 
     public void setPrecoFinal(Double precoFinal) {

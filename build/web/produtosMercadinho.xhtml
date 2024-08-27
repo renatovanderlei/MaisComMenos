@@ -2,84 +2,82 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:head>
         <title>Produtos</title>
     </h:head>
     <h:body>
+        <c:if test="#{loginController.mercadinhoLogado ne null}" >
         <ui:include src="menuMercadinho.xhtml" />
-        <h:form id="formLotes">
-            <p:panelGrid columns="1" styleClass="ui-widget-content">
-                <!-- Botão para abrir o diálogo de cadastro -->
-                <p:commandButton value="Cadastrar Produto" 
-                                 onclick="PF('dlgCadastro').show()" 
-                                 styleClass="ui-button-success"/>
+            <p:growl id="gro" life="4000" showSummary="true" 
+                     showDetail="true" sticky="false"/>
+            <h:form id="formLotes">
+                <p:fieldset legend="Meus Produtos" style="width: 80%;margin: 0 auto" >
+                    <p:commandButton value="novo produto" onclick="location.href = 'inserirProduto.xhtml'"/>
+                    <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4" >
 
-                <!-- Tabela de produtos -->
-                <p:dataTable id="dataTableLotes" value="#{produtoController.lotesProdutos}" var="l" styleClass="ui-datatable">
-                    <p:column headerText="Produto">
-                        <h:outputText value="#{l.nomeProduto}" />
-                    </p:column>
-                    <p:column headerText="Marca">
-                        <h:outputText value="#{l.marca}" />
-                    </p:column>
-                    <p:column headerText="Lote">
-                        <h:outputText value="#{l.lote}" />
-                    </p:column>
-                    <p:column headerText="Preço Inicial">
-                        <h:outputText value="#{l.precoInicial}" />
-                    </p:column>
-                    <p:column headerText="Validade">
-                        <h:outputText value="#{l.validade}" />
-                    </p:column>
-                    <p:column headerText="Preço Final">
-                        <h:outputText value="#{l.precoFinal}" />
-                    </p:column>
-                    <p:column>
+                        <c:forEach items="#{produtoController.carregarLotesProdutos()}" var="produto">
+                            <p:panel header="${produto.nomeProduto}" style="text-align:center">
+<!--                                <p:commandLink value="a:"  action="#{produtoController.setLoteProdutoSelecionado(produto)}" onmouseup="console.log(${produto})">-->
+                                <!--</p:commandLink>-->
+                                <p:panel>
+                                    <h:outputText value="Marca: ${produto.marca}"/><br/>
+                                    <h:outputText value="Lote: ${produto.lote}"/><br/>
+                                    <h:outputText value="Preço Inicial: ${produto.precoInicialFormatado}"/><br/>
+                                    
+                                    <h:outputText value="Preço Final: ${produto.precoFinalFormatado}"><br/>
+                                    </h:outputText>
+                                </p:panel>
+                                <p:panel>
+                                    <h:outputText value="Validade: ${produto.validade}"/>
+                                    
+                                </p:panel>
+                                
                         <!-- Botão para editar um produto -->
-                        <p:commandButton value="Editar" 
-                                         action="#{produtoController.setLoteProdutoSelecionado(l)}" 
-                                         update=":formLotes:panelCadastro" />
+                        <p:commandButton value="editar" ajax='true' update=":formEditLote" action="#{produtoController.setarLote(produto)}" oncomplete="$('.mLote').modal('show')" />
+                            
+                    
                         <!-- Botão para deletar um produto -->
-                        <p:commandButton value="Deletar" 
+                        <p:commandButton value="deletar" 
                                          action="#{produtoController.deletar()}" 
-                                         update=":formLotes:dataTableLotes"
+                                         update=":formLotes"
                                          oncomplete="PF('dlgCadastro').hide()" />
-                    </p:column>
-                </p:dataTable>
-            </p:panelGrid>
+                            </p:panel>
+                        </c:forEach>
+                        
+                        </b:panelGrid>
+</p:fieldset>
+            </h:form>
+            
+            <b:form id="formEditLote">
+                <b:modal id="modalEditLote" title="Editar Informações do Lote" class="mLote">
+                <p:panel header="${produtoController.loteProdutoSelecionado.nomeProduto} ${produtoController.loteProdutoSelecionado.marca}" style="text-align:center">
+                        <h:outputText value="Nome:"/>
+                        <b:inputText value="#{produtoController.loteProdutoSelecionado.nomeProduto}"/>
+                        <h:outputText value="Marca:"/>
+                        <b:inputText value="#{produtoController.loteProdutoSelecionado.marca}"/>
+                        <h:outputText value="Lote:"/>
+                        <b:inputText value="#{produtoController.loteProdutoSelecionado.lote}"/>
+                        <h:outputText value="validade:"/>
+                        <b:inputText value="#{produtoController.loteProdutoSelecionado.validade}"/>
+                    </p:panel>
+                    
+                <p:commandButton value="Editar" action="#{produtoController.alterar()}" 
+                                         update=":formLotes" oncomplete="$('.mLote').modal('hide')" />
 
-            <!-- Diálogo de cadastro de lote de produto -->
-            <p:dialog header="Cadastro de Lote de Produto" widgetVar="dlgCadastro" modal="true" id="panelCadastro">
-                <h:panelGrid columns="2" cellpadding="10">
-                    <h:outputText value="Nome do Produto:" />
-                    <p:inputText value="#{produtoController.loteProdutoCadastro.nomeProduto}" required="true" />
 
-                    <h:outputText value="Marca:" />
-                    <p:inputText value="#{produtoController.loteProdutoCadastro.marca}" required="true" />
 
-                    <h:outputText value="Lote:" />
-                    <p:inputText value="#{produtoController.loteProdutoCadastro.lote}" required="true" />
+            </b:modal>
+        </b:form>
+            
+            
 
-                    <h:outputText value="Preço Inicial:" />
-                    <p:inputMask mask="99.99" value="#{produtoController.loteProdutoCadastro.precoInicial}" required="true" />
 
-                    <h:outputText value="Validade:" />
-                    <p:inputText type="date" value="#{produtoController.loteProdutoCadastro.validade}" required="true" />
-
-                    <h:outputText value="Preço Final:" />
-                    <p:inputMask mask="99.99" value="#{produtoController.loteProdutoCadastro.precoFinal}" required="true" />
-
-                    <!-- Botões de salvar e cancelar -->
-                    <p:commandButton value="Salvar" 
-                                     action="#{produtoController.inserir()}" 
-                                     update=":formLotes:dataTableLotes"
-                                     oncomplete="PF('dlgCadastro').hide()" />
-                    <p:commandButton value="Cancelar" 
-                                     onclick="PF('dlgCadastro').hide()" />
-                </h:panelGrid>
-            </p:dialog>
-        </h:form>
+                        
+        </c:if>
     </h:body>
 </html>
