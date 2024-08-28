@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+
+        <ui:include src="menuMercadinho.xhtml" rendered="true" />
+
+        <p:growl id="growl" showDetail="true" />
+
+        <h:form id="formPerfil">
+            <!-- Exibe as informações do Mercadinho Logado -->
+            <p:fieldset legend="Perfil do Mercadinho #{loginController.mercadinhoLogado.nome}!" style="width: 50%; margin: 0 auto;">
+                <h:outputText value="Nome: #{loginController.mercadinhoLogado.nome}" /><br />
+                <h:outputText value="Login: #{loginController.mercadinhoLogado.login}" /><br />
+                <h:outputText value="CNPJ: #{loginController.mercadinhoLogado.cnpj}" /><br />
+                <h:outputText value="Endereço: #{loginController.mercadinhoLogado.endereco}" /><br />
+                <h:outputText value="Contato: #{loginController.mercadinhoLogado.contato}" /><br />
+
+                <!-- Botão para abrir modal de edição -->
+                <p:commandButton value="Editar Perfil" 
+                                 oncomplete="PF('dlgEditPerfil').show();" 
+                                 update=":formEditPerfil"/>
+
+            </p:fieldset>
+        </h:form>
+
+        <!-- Modal para editar o perfil -->
+        <p:dialog id="dlgEditPerfil" widgetVar="dlgEditPerfil" header="Editar Perfil" modal="true" closable="false" resizable="false" width="400px">
+            <h:form id="formEditPerfil">
+                <p:panelGrid columns="2" style="width: 100%;">
+                    <h:outputLabel for="nome" value="Nome:" />
+                    <p:inputText id="nome" value="#{loginController.mercadinhoLogado.nome}" />
+
+                    <h:outputLabel for="login" value="Login:" />
+                    <p:inputText id="login" value="#{mercadinhoController.mercadinhoLogado.login}" />
+
+                    <h:outputLabel for="cnpj" value="CNPJ:" />
+                    <p:inputText id="cnpj" value="#{mercadinhoController.mercadinhoLogado.cnpj}" />
+
+                    <h:outputLabel for="endereco" value="Endereço:" />
+                    <p:inputText id="endereco" value="#{mercadinhoController.mercadinhoLogado.endereco}" />
+
+                    <h:outputLabel for="contato" value="Contato:" />
+                    <p:inputText id="contato" value="#{mercadinhoController.mercadinhoLogado.contato}" />
+                </p:panelGrid>
+
+                <p:commandButton value="Salvar" action="#{mercadinhoController.alterar()}" 
+                                 oncomplete="PF('dlgEditPerfil').hide(); PF('growl').renderMessage();" 
+                                 update=":formPerfil, :growl"/>
+                <p:commandButton value="Cancelar" onclick="PF('dlgEditPerfil').hide();" type="button"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+
