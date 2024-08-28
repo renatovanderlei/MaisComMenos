@@ -26,9 +26,9 @@ public class MercadinhoController {
     }
 
     public Mercadinho getMercadinhoLogado() {
-        // Pega o mercadinho logado da sessão
         mercadinhoLogado = (Mercadinho) FacesContext.getCurrentInstance()
                 .getExternalContext().getSessionMap().get("mercadinhoLogado");
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("mercadinhoLogado", mercadinhoLogado);
         return mercadinhoLogado;
     }
 
@@ -57,7 +57,9 @@ public class MercadinhoController {
             valid = false;
         }
 
-        if (!valid) return;
+        if (!valid) {
+            return;
+        }
 
         // Verificar duplicidade de Login
         if (!ManagerDao.getCurrentInstance()
@@ -87,7 +89,7 @@ public class MercadinhoController {
     public void alterar() {
         FacesContext context = FacesContext.getCurrentInstance();
         try {
-            ManagerDao.getCurrentInstance().update(selection);
+            ManagerDao.getCurrentInstance().update(mercadinhoLogado);
             context.addMessage(null, new FacesMessage("Sucesso", "Mercadinho atualizado com sucesso!"));
         } catch (Exception e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao atualizar mercadinho."));
@@ -110,7 +112,6 @@ public class MercadinhoController {
     }
 
     // Getters e Setters
-
     public Mercadinho getMercadinhoCadastro() {
         return mercadinhoCadastro;
     }

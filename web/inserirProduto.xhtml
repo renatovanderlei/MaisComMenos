@@ -11,43 +11,52 @@
     </h:head>
     <h:body>
         <ui:include src="menuMercadinho.xhtml"/>
-        
+
         <b:form id="formPet" enctype="multipart/form-data" style="width: 50%;margin: 0 auto">
 
             <p:fieldset legend="Cadastrar Novo Produto" style="width: 80%;margin: 0 auto" >
-                    <b:panelGrid columns="3">
+                <b:panelGrid columns="3">
 
-                        <b:panelGrid columns="1">
-                            <h:outputText value="Nome"/>
-                            <b:inputText value="#{produtoController.loteProdutoCadastro.nomeProduto}"/>                        
-                        </b:panelGrid>
-                        <b:panelGrid columns="1">
-                            <h:outputText value="Marca"/>
-                            <b:inputText value="#{produtoController.loteProdutoCadastro.marca}"/>                        
-                        </b:panelGrid>
-                        <b:panelGrid columns="1">
-                            <h:outputText value="Lote"/>
-                            <b:inputText value="#{produtoController.loteProdutoCadastro.lote}"/>                        
-                        </b:panelGrid>
-                        <b:panelGrid columns="1">
-                            <h:outputText value="Preço Inicial"/>
-                            <b:inputText value="#{produtoController.loteProdutoCadastro.precoInicial}"/>                        
-                        </b:panelGrid>
-                        <b:panelGrid columns="1">
-                            <h:outputText value="Validade"/>
-                            <b:inputText value="#{produtoController.loteProdutoCadastro.validade}"
-                                         p:type="date" 
-                         required="false" id="validade" label="Data de validade"/>                       
-                        </b:panelGrid>
-                        <b:panelGrid columns="1">
-                            <h:outputText value="Preço Final"/>
-                            <b:inputText value="#{produtoController.loteProdutoCadastro.precoFinal}"/>                        
-                        </b:panelGrid>
-                        
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Nome"/>
+                        <b:inputText value="#{produtoController.loteProdutoCadastro.nomeProduto}"/>                        
                     </b:panelGrid>
-                    
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Categoria:" />
+                        <p:selectOneMenu value="#{produtoController.loteProdutoCadastro.categoria}">
+                            <f:selectItem itemLabel="Selecione" />
+                            <f:selectItems value="#{produtoController.categoriasPredefinidas}" />
+                        </p:selectOneMenu>
+                    </b:panelGrid>
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Marca"/>
+                        <b:inputText value="#{produtoController.loteProdutoCadastro.marca}"/>                        
+                    </b:panelGrid>
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Lote"/>
+                        <b:inputText value="#{produtoController.loteProdutoCadastro.lote}"/>                        
+                    </b:panelGrid>
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Quantidade"/>
+                        <b:inputText value="#{produtoController.loteProdutoCadastro.quantidade}"/>                        
+                    </b:panelGrid>
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Preço Inicial"/>
+                        <b:inputText value="#{produtoController.loteProdutoCadastro.precoInicial}"/>                        
+                    </b:panelGrid>
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Validade (yyyy-MM-dd)"/>
+                        <b:inputText value="#{produtoController.validadeString}" />                        
+                    </b:panelGrid>
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Preço Final"/>
+                        <b:inputText value="#{produtoController.loteProdutoCadastro.precoFinal}"/>                        
+                    </b:panelGrid>
+
+                </b:panelGrid>
+
                 <p:commandButton value="inserir Produto" action="#{produtoController.inserir()}" oncomplete="location.href = 'produtosMercadinho.xhtml'"/>
-                                        
+
             </p:fieldset>
 
         </b:form>

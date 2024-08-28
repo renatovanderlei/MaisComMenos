@@ -11,73 +11,62 @@
         <title>Produtos</title>
     </h:head>
     <h:body>
-        <c:if test="#{loginController.mercadinhoLogado ne null}" >
-        <ui:include src="menuMercadinho.xhtml" />
-            <p:growl id="gro" life="4000" showSummary="true" 
-                     showDetail="true" sticky="false"/>
+        <c:if test="#{loginController.mercadinhoLogado ne null}">
+            <ui:include src="menuMercadinho.xhtml" />
+            <p:growl id="gro" life="4000" showSummary="true" showDetail="true" sticky="false"/>
             <h:form id="formLotes">
-                <p:fieldset legend="Meus Produtos" style="width: 80%;margin: 0 auto" >
-                    <p:commandButton value="novo produto" onclick="location.href = 'inserirProduto.xhtml'"/>
-                    <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4" >
-
+                <p:fieldset legend="Meus Produtos" style="width: 80%;margin: 0 auto">
+                    <p:commandButton value="Novo produto" onclick="location.href = 'inserirProduto.xhtml'"/>
+                    <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4">
                         <c:forEach items="#{produtoController.carregarLotesProdutos()}" var="produto">
                             <p:panel header="${produto.nomeProduto}" style="text-align:center">
-<!--                                <p:commandLink value="a:"  action="#{produtoController.setLoteProdutoSelecionado(produto)}" onmouseup="console.log(${produto})">-->
-                                <!--</p:commandLink>-->
                                 <p:panel>
+                                    <h:outputText value="Categoria: ${produto.categoria}"/><br/>
                                     <h:outputText value="Marca: ${produto.marca}"/><br/>
                                     <h:outputText value="Lote: ${produto.lote}"/><br/>
+                                    <h:outputText value="Quantidade: ${produto.quantidade}"/><br/>
                                     <h:outputText value="Preço Inicial: ${produto.precoInicialFormatado}"/><br/>
-                                    
-                                    <h:outputText value="Preço Final: ${produto.precoFinalFormatado}"><br/>
-                                    </h:outputText>
+                                    <h:outputText value="Preço Final: ${produto.precoFinalFormatado}"/><br/>
+                                    <h:outputText value="Validade: ${produto.validade}"/><br/>
+                                    <h:outputText value="Dias para vencer: ${produto.diasRestantes}"/>
                                 </p:panel>
-                                <p:panel>
-                                    <h:outputText value="Validade: ${produto.validade}"/>
-                                    
-                                </p:panel>
-                                
-                        <!-- Botão para editar um produto -->
-                        <p:commandButton value="editar" ajax='true' update=":formEditLote" action="#{produtoController.setarLote(produto)}" oncomplete="$('.mLote').modal('show')" />
-                            
-                    
-                        <!-- Botão para deletar um produto -->
-                        <p:commandButton value="deletar" 
-                                         action="#{produtoController.deletar()}" 
-                                         update=":formLotes"
-                                         oncomplete="PF('dlgCadastro').hide()" />
+                                <p:commandButton value="editar" ajax="true" update=":formEditLote" action="#{produtoController.setarLote(produto)}" oncomplete="$('.mLote').modal('show')" />
+                                <p:commandButton value="deletar" action="#{produtoController.deletar()}" update=":formLotes" oncomplete="PF('dlgCadastro').hide()" />
                             </p:panel>
                         </c:forEach>
-                        
-                        </b:panelGrid>
-</p:fieldset>
+                    </b:panelGrid>
+                </p:fieldset>
             </h:form>
-            
+
             <b:form id="formEditLote">
                 <b:modal id="modalEditLote" title="Editar Informações do Lote" class="mLote">
-                <p:panel header="${produtoController.loteProdutoSelecionado.nomeProduto} ${produtoController.loteProdutoSelecionado.marca}" style="text-align:center">
+                    <p:panel header="${produtoController.loteProdutoSelecionado.nomeProduto} ${produtoController.loteProdutoSelecionado.marca}" style="text-align:center">
                         <h:outputText value="Nome:"/>
                         <b:inputText value="#{produtoController.loteProdutoSelecionado.nomeProduto}"/>
+                        <h:outputText value="Categoria:" />
+                        <p:selectOneMenu value="#{produtoController.loteProdutoSelecionado.categoria}" style="width: 100%;">
+                            <f:selectItem itemLabel="Selecione" />
+                            <f:selectItems value="#{produtoController.categoriasPredefinidas}" />
+                        </p:selectOneMenu><br/>
                         <h:outputText value="Marca:"/>
                         <b:inputText value="#{produtoController.loteProdutoSelecionado.marca}"/>
                         <h:outputText value="Lote:"/>
                         <b:inputText value="#{produtoController.loteProdutoSelecionado.lote}"/>
-                        <h:outputText value="validade:"/>
-                        <b:inputText value="#{produtoController.loteProdutoSelecionado.validade}"/>
+                        <h:outputText value="Quantidade:"/>
+                        <b:inputText value="#{produtoController.loteProdutoSelecionado.quantidade}"/>
+                        <h:outputText value="Validade (yyyy-MM-dd)" /><br/>
+                        <p:inputMask value="#{produtoController.validadeString}" mask="9999-99-99" /><br/>
+                        <h:outputText value="Preço Inicial:"/>
+                        <b:inputText value="#{produtoController.loteProdutoSelecionado.precoInicial}" style="width: 100%;"/>
+                        <h:outputText value="Preço Final:"/>
+                        <b:inputText value="#{produtoController.loteProdutoSelecionado.precoFinal}" style="width: 100%;"/>
+                        <h:outputText value="Dias para vencer:"/>
+                        <h:outputText value="#{produtoController.loteProdutoSelecionado.diasRestantes}" />
                     </p:panel>
-                    
-                <p:commandButton value="Editar" action="#{produtoController.alterar()}" 
-                                         update=":formLotes" oncomplete="$('.mLote').modal('hide')" />
+                    <p:commandButton value="Editar" action="#{produtoController.alterar()}" update=":formLotes" oncomplete="$('.mLote').modal('hide')" />
+                </b:modal>
+            </b:form>
 
-
-
-            </b:modal>
-        </b:form>
-            
-            
-
-
-                        
         </c:if>
     </h:body>
 </html>

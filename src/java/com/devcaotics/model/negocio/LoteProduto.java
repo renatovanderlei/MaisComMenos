@@ -22,6 +22,9 @@ public class LoteProduto {
     @JoinColumn(name = "id_mercadinho", nullable = false)
     private Mercadinho mercadinho;
 
+    @Column(name = "categoria")
+    private String categoria;
+
     @Column(name = "nome_produto")
     private String nomeProduto;
 
@@ -31,11 +34,17 @@ public class LoteProduto {
     @Column(name = "lote")
     private String lote;
 
+    @Column(name = "quantidade")
+    private String quantidade;
+
     @Column(name = "preco_inicial")
     private Double precoInicial;
 
     @Column(name = "validade")
     private Date validade;
+
+    @Column(name = "dias_restantes")
+    private int diasRestantes;
 
     @Column(name = "preco_final")
     private Double precoFinal;
@@ -92,8 +101,8 @@ public class LoteProduto {
     public void setPrecoInicial(Double precoInicial) {
         this.precoInicial = precoInicial;
     }
-    
-    public String getPrecoInicialFormatado(){
+
+    public String getPrecoInicialFormatado() {
         return String.format("R$%.2f", this.precoInicial);
     }
 
@@ -108,8 +117,8 @@ public class LoteProduto {
     public Double getPrecoFinal() {
         return precoFinal;
     }
-    
-    public String getPrecoFinalFormatado(){
+
+    public String getPrecoFinalFormatado() {
         return String.format("R$%.2f", this.precoFinal);
     }
 
@@ -119,6 +128,30 @@ public class LoteProduto {
 
     public ONG getOngInteressada() {
         return ongInteressada;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public String getQuantidade() {
+        return quantidade;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public void setQuantidade(String quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public int getDiasRestantes() {
+        return diasRestantes;
+    }
+
+    public void setDiasRestantes(int diasRestantes) {
+        this.diasRestantes = diasRestantes;
     }
 
     public void setOngInteressada(ONG ongInteressada) {
