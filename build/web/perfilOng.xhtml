@@ -5,30 +5,39 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:b="http://bootsfaces.net/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
     <h:head>
         <title>Facelet Title</title>
     </h:head>
-    <h:body>
 
-        <ui:include src="menuOng.xhtml" rendered="true" />
+    <h:body>
+        <!-- Componente growl para exibir mensagens -->
+        <p:growl id="growl" showDetail="true" sticky="false" life="3000"/>
+
+        <ui:include src="menuOng.xhtml" rendered="true"/>
 
         <b:form>
             <b:panelGrid columns="2" colSpans="2,10">
                 <b:panel>
                     <b:commandLink value="editar perfil" ajax='true' update=":formEditUsuario"
                                    oncomplete="$('.mUsuario').modal('show')">
-                        <f:setPropertyActionListener value="#{loginController.OngLogada}"
+                        <f:setPropertyActionListener value="#{loginController.ongLogada}"
                                                      target="#{ongController.selection}"/>
                     </b:commandLink><br/>
                     <b:commandLink value="alterar senha" ajax="true" 
-                                   oncomplete="$('.mAltSenha').modal('show')"/>
+                                   oncomplete="$('.oAltSenha').modal('show')"/>
                 </b:panel>
                 <b:panel>
                     <h:outputText value="Perfil de: " style="font-size: 25pt"/>
-                    <h:outputText value="#{ongController.ongLogada.nome}" style="font-size: 25pt; font-style: italic"/>
-                    <b:panelGrid columns="2" colSpans="2,10">
-                        <h:outputText value="contato: #{ongController.ongLogada.contato}"/>
+                    <h:outputText value="#{ongController.selection.nome}" style="font-size: 25pt; font-style: italic"/>
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Nome: #{ongController.selection.nome}"/>
+                        <h:outputText value="Login: #{ongController.selection.login}"/>
+                        <h:outputText value="Endereço: #{ongController.selection.endereco}"/>
+                        <h:outputText value="Contato: #{ongController.selection.contato}"/> 
+                        <h:outputText value="Senha: #{ongController.selection.senha}"/> 
                     </b:panelGrid>
                 </b:panel>
             </b:panelGrid>
@@ -37,33 +46,48 @@
         <b:form id="formEditUsuario">
             <b:modal id="modalEditUsuario" class="mUsuario">
                 <b:panelGrid columns="2">
+                    <h:outputText value="Nome:"/>
+                    <b:inputText value="#{ongController.selection.nome}"/>
 
-                    <h:outputText value="contato"/>
+                    <h:outputText value="Login"/>
+                    <b:inputText value="#{ongController.selection.login}"/>
+
+                    <h:outputText value="Endereço:"/>
+                    <b:inputText value="#{ongController.selection.endereco}"/>
+
+                    <h:outputText value="Contato"/>
                     <b:inputText value="#{ongController.selection.contato}"/>
+
+                    <h:outputText value="Senha"/>
+                    <b:inputText value="#{ongController.selection.senha}"/>
+
                 </b:panelGrid>
+
+                <p:commandButton value="Salvar" action="#{ongController.alterar()}" 
+                                 oncomplete="$('.mUsuario').modal('hide'); PF('growl').renderMessage();" 
+                                 update=":formEditUsuario, :growl"/>
+                <p:commandButton value="Cancelar" onclick="$('.mUsuario').modal('hide');" type="button"/>
             </b:modal>
         </b:form>
 
         <b:form id="formAlteraSenha">
-
-            <b:modal id="modalAltSenha" class="mAltSenha">
-
+            <b:modal id="modalAltSenha" class="oAltSenha">
                 <b:panelGrid columns="2">
-
-                    <h:outputText value="senha atual"/>
+                    <h:outputText value="Senha atual"/>
                     <b:inputSecret value="#{senha}"/>
 
-                    <h:outputText value="nova senha"/>
+                    <h:outputText value="Nova senha"/>
                     <b:inputSecret value="#{nSenha}"/>
 
-                    <h:outputText value="confirma nova senha"/>
+                    <h:outputText value="Confirma nova senha"/>
                     <b:inputSecret value="#{confirma}"/>
-
-
                 </b:panelGrid>
 
+                <p:commandButton value="Salvar" action="#{ongController.alterarSenha()}" 
+                                 oncomplete="$('.oAltSenha').modal('hide'); PF('growl').renderMessage();" 
+                                 update=":formAlteraSenha, :growl"/>
+                <p:commandButton value="Cancelar" onclick="$('.oAltSenha').modal('hide');" type="button"/>
             </b:modal>
-
         </b:form>
 
     </h:body>
