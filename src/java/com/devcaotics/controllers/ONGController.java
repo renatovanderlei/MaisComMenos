@@ -78,13 +78,12 @@ public class ONGController {
         this.selection = selection;
     }
 
-    public String alterar() {
+    public void alterar() {
         ManagerDao.getCurrentInstance().update(this.selection);
 
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso!", "ONG atualizada com sucesso"));
 
-        return "ongs";
     }
 
     public void deletar() {
@@ -92,5 +91,32 @@ public class ONGController {
 
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage("Sucesso!", "ONG deletada"));
+    }
+    
+    public void alterarSenha(String senha, String novaSenha, String confirma) {
+
+        //código para recuperar qualquer atributo na sessão
+        ONG oLogado = selection;
+
+        if (!oLogado.getSenha().equals(senha)) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage("A senha digitada está incorreta. "
+                            + "Por favor, tente novamente"));
+            return;
+        }
+
+        if (!novaSenha.equals(confirma)) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage("A nova senha não bate com a confirmação. "
+                            + "Por favor, tente novamente"));
+            return;
+        }
+
+        oLogado.setSenha(novaSenha);
+
+        ManagerDao.getCurrentInstance().update(oLogado);
+
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage("Senha alterada com sucesso!"));
     }
 }

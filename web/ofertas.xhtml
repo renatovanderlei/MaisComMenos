@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Ofertas</title>
+    </h:head>
+    <h:body>
+        <c:if test="#{loginController.ongLogada ne null}">
+            <ui:include src="menuOng.xhtml" />
+            <p:growl id="gro" life="4000" showSummary="true" showDetail="true" sticky="false"/>
+            <h:form id="formLotes">
+                
+                <p:fieldset legend="Ofertas" style="width: 80%;margin: 0 auto">
+                    <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4">
+                        <c:forEach items="#{produtoController.readAll()}" var="produto">
+                            <p:panel header="${produto.nomeProduto}" style="text-align:center">
+                                <p:panel>
+                                    <h:outputText value="Categoria:" style="font-weight: bolder"/>
+                                    <h:outputText value=" ${produto.categoria}"/><br/>
+                                    <h:outputText value="Marca:" style="font-weight: bolder"/>
+                                    <h:outputText value=" ${produto.marca}"/><br/>
+                                    <h:outputText value="Lote:" style="font-weight: bolder"/>
+                                    <h:outputText value=" ${produto.lote}"/><br/>
+                                    <h:outputText value="Quantidade:" style="font-weight: bolder"/>
+                                    <h:outputText value=" ${produto.quantidade}"/><br/>
+                                    <h:outputText value="Preço inicial:" style="font-weight: bolder"/>
+                                    <h:outputText value=" ${produto.precoInicialFormatado}"/><br/>
+                                    <h:outputText value="Preço Final:" style="font-weight: bolder"/>
+                                    <h:outputText value=" ${produto.precoFinalFormatado}"/><br/>
+                                    <h:outputText value="validade:" style="font-weight: bolder"/>
+                                    <h:outputText value=" ${produto.validadeFormatada}"/><br/><br/>
+                                    <c:choose>
+                                        <c:when test="#{produto.diasRestantes > 2}">
+                                            <h:outputText value="Dias para vencer: #{produto.diasRestantes}" style="color: black; " />
+                                        </c:when>
+                                        <c:otherwise>
+                                
+                                            <h:outputText value="Dias para vencer: #{produto.diasRestantes}" style="color: red; font-weight: bolder"/>
+                                
+                                        </c:otherwise>
+
+
+                                    </c:choose>
+                                    
+                                    <br/>
+                                    <h:outputText value="Fornecedor:" style="font-weight: bolder"/>
+                                    <b:commandLink value=" #{produto.mercadinho.nome}" ajax="true" 
+                                   oncomplete="PF('modalInfo').show()"/>
+                                        
+                                </p:panel>
+                                <p:commandButton value="Fazer pedido" ajax="true" action="#{produtoController.setarLote(produto)}" oncomplete="PF('modalInfo').show()" />
+                                <!--<p:commandButton value="deletar" oncomplete="PF('dlgCadastro').hide()" />-->
+                            </p:panel>
+                        </c:forEach>
+                    </b:panelGrid>
+                </p:fieldset>
+                
+        
+            </h:form>
+            
+        </c:if>
+        
+        <p:dialog header="Dados do Fornecedor" widgetVar="modalInfo" modal="true" showEffect="fade"
+                  hideEffect="fade" id="modalInfo" width="400">
+            <h:form id="formInfo">
+                <b:panelGrid columns="2">
+
+                    <h:outputText value="#{produto.mercadinho.nome}"/>
+                    <h:outputText value="#{produto.mercadinho.endereco}"/>
+                    <h:outputText value="#{produto.mercadinho.contato}"/>
+                    </b:panelGrid>
+                <p:commandButton value="Alterar Senha" ajax="true" 
+                                 update=":gro, :formInfo" oncomplete="PF('modalInfo').hide()"/>
+                <p:commandButton value="Cancelar" onclick="PF('modalInfo').hide()" type="button"/>
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>

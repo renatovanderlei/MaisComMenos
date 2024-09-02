@@ -24,7 +24,7 @@
                
                 <b:navbarLinks pull="right">
                     <b:dropMenu value="#{(loginController.mercadinhoLogado ne null ? loginController.mercadinhoLogado.nome : '')}">
-                        <b:navLink value="Meu perfil" href="perfilMercadinho.xhtml"></b:navLink>
+                        <b:navLink value="Meu perfil" onclick="#{mercadinhoController.setSelection(loginController.mercadinhoLogado)}" href="perfilMercadinho.xhtml"></b:navLink>
                         <b:navLink value="Logout" onclick="location.href = 'index.xhtml';ajax:loginController.logout()"></b:navLink>
                     </b:dropMenu>
                 </b:navbarLinks>

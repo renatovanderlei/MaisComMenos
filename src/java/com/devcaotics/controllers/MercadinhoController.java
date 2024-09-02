@@ -26,9 +26,9 @@ public class MercadinhoController {
     }
 
     public Mercadinho getMercadinhoLogado() {
-        // Pega o mercadinho logado da sessão
         mercadinhoLogado = (Mercadinho) FacesContext.getCurrentInstance()
                 .getExternalContext().getSessionMap().get("mercadinhoLogado");
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("mercadinhoLogado", mercadinhoLogado);
         return mercadinhoLogado;
     }
 
@@ -57,7 +57,9 @@ public class MercadinhoController {
             valid = false;
         }
 
-        if (!valid) return;
+        if (!valid) {
+            return;
+        }
 
         // Verificar duplicidade de Login
         if (!ManagerDao.getCurrentInstance()
@@ -110,7 +112,6 @@ public class MercadinhoController {
     }
 
     // Getters e Setters
-
     public Mercadinho getMercadinhoCadastro() {
         return mercadinhoCadastro;
     }
@@ -133,5 +134,32 @@ public class MercadinhoController {
 
     public void setModalType(String modalType) {
         this.modalType = modalType;
+    }
+    
+    public void alterarSenha(String senha, String novaSenha, String confirma) {
+
+        //código para recuperar qualquer atributo na sessão
+        Mercadinho mLogado = selection;
+
+        if (!mLogado.getSenha().equals(senha)) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage("A senha digitada está incorreta. "
+                            + "Por favor, tente novamente"));
+            return;
+        }
+
+        if (!novaSenha.equals(confirma)) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage("A nova senha não bate com a confirmação. "
+                            + "Por favor, tente novamente"));
+            return;
+        }
+
+        mLogado.setSenha(novaSenha);
+
+        ManagerDao.getCurrentInstance().update(mLogado);
+
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage("Senha alterada com sucesso!"));
     }
 }

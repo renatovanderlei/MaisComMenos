@@ -24,7 +24,7 @@
                
                 <b:navbarLinks pull="right">
                     <b:dropMenu value="#{(loginController.ongLogada ne null ? loginController.ongLogada.nome : '')}">
-                        <b:navLink value="Meu perfil" href="perfilOng.xhtml"></b:navLink>
+                        <b:navLink value="Meu perfil" onclick="#{ongController.setSelection(loginController.ongLogada)}" href="perfilOng.xhtml"></b:navLink>
                         <b:navLink value="Logout" onclick="location.href = 'index.xhtml';ajax:loginController.logout()"></b:navLink>
                     </b:dropMenu>
                 </b:navbarLinks>

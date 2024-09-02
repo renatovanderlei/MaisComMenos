@@ -9,71 +9,68 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
-        <title>Perfil do Mercadinho</title>
+        <title>Facelet Title</title>
     </h:head>
 
     <h:body>
         <!-- Componente growl para exibir mensagens -->
         <p:growl id="growl" showDetail="true" sticky="false" life="3000"/>
 
-        <ui:include src="menuMercadinho.xhtml" rendered="true"/>
+        <ui:include src="menuOng.xhtml" rendered="true"/>
 
         <b:form>
             <b:panelGrid columns="2" colSpans="2,10">
                 <b:panel>
-                    <b:commandLink value="Editar Perfil" ajax="true" update=":formEditMercadinho"
-                                   oncomplete="PF('modalEditMercadinho').show()">
-                        <f:setPropertyActionListener value="#{loginController.mercadinhoLogado}"
-                                                     target="#{mercadinhoController.selection}"/>
+                    <b:commandLink value="editar perfil" ajax='true' update=":formEditOng"
+                                   oncomplete="PF('modalEditOng').show()">
+                        <f:setPropertyActionListener value="#{loginController.ongLogada}"
+                                                     target="#{ongController.selection}"/>
                     </b:commandLink><br/>
                     <b:commandLink value="Alterar Senha" ajax="true" 
                                    oncomplete="PF('modalAltSenha').show()"/>
                 </b:panel>
                 <b:panel>
                     <h:outputText value="Perfil de: " style="font-size: 25pt"/>
-                    <h:outputText value="#{mercadinhoController.selection.nome}" style="font-size: 25pt; font-style: italic"/>
+                    <h:outputText value="#{ongController.selection.nome}" style="font-size: 25pt; font-style: italic"/>
                     <b:panelGrid columns="1">
                         <h:outputText value="Nome:" style="font-weight: bolder"/>
-                        <h:outputText value=" #{mercadinhoController.selection.nome}"/>
+                        <h:outputText value=" #{ongController.selection.nome}"/>
                         <h:outputText value="Login:" style="font-weight: bolder"/>
-                        <h:outputText value=" #{mercadinhoController.selection.login}"/>
-                        <h:outputText value="CNPJ:" style="font-weight: bolder"/>
-                        <h:outputText value=" #{mercadinhoController.selection.cnpj}"/>
+                        <h:outputText value=" #{ongController.selection.login}"/>
                         <h:outputText value="Endereço:" style="font-weight: bolder"/>
-                        <h:outputText value=" #{mercadinhoController.selection.endereco}"/>
-                        <h:outputText value="Contato:" style="font-weight: bolder"/>
-                        <h:outputText value=" #{mercadinhoController.selection.contato}"/>
+                        <h:outputText value=" #{ongController.selection.endereco}"/>
+                        <h:outputText value="Contato: " style="font-weight: bolder"/>
+                        <h:outputText value=" #{ongController.selection.contato}"/> 
                     </b:panelGrid>
                 </b:panel>
             </b:panelGrid>
         </b:form>
 
+        
         <!-- Modal para Edição do Perfil -->
-        <p:dialog header="Editar Perfil" widgetVar="modalEditMercadinho" modal="true" showEffect="fade"
-                  hideEffect="fade" id="modalEditMercadinho" width="600">
-            <h:form id="formEditMercadinho">
+        <p:dialog header="Editar Perfil" widgetVar="modalEditOng" modal="true" showEffect="fade"
+                  hideEffect="fade" id="modalEditOng" width="600">
+            <h:form id="formEditOng">
                 <p:panelGrid columns="2">
                     <h:outputText value="Nome:"/>
-                    <p:inputText value="#{mercadinhoController.selection.nome}" />
+                    <p:inputText value="#{ongController.selection.nome}" />
 
                     <h:outputText value="Login:"/>
-                    <p:inputText value="#{mercadinhoController.selection.login}" />
-
-                    <h:outputText value="CNPJ:"/>
-                    <p:inputText value="#{mercadinhoController.selection.cnpj}" />
-
+                    <p:inputText value="#{ongController.selection.login}" />
+                    
                     <h:outputText value="Endereço:"/>
-                    <p:inputText value="#{mercadinhoController.selection.endereco}" />
+                    <p:inputText value="#{ongController.selection.endereco}" />
 
                     <h:outputText value="Contato:"/>
-                    <p:inputText value="#{mercadinhoController.selection.contato}" />
+                    <p:inputText value="#{ongController.selection.contato}" />
                 </p:panelGrid>
-                <p:commandButton value="Salvar" action="#{mercadinhoController.alterar()}"
-                                 update=":growl, :formEditMercadinho" oncomplete="PF('modalEditMercadinho').hide()"/>
-                <p:commandButton value="Cancelar" onclick="PF('modalEditMercadinho').hide()" type="button"/>
+                <p:commandButton value="Salvar" action="#{ongController.alterar()}"
+                                 update=":growl, :formEditOng" oncomplete="PF('modalEditOng').hide()"/>
+                <p:commandButton value="Cancelar" onclick="PF('modalEditOng').hide()" type="button"/>
             </h:form>
         </p:dialog>
 
+        
         <!-- Modal para Alterar Senha -->
         <p:dialog header="Alterar Senha" widgetVar="modalAltSenha" modal="true" showEffect="fade"
                   hideEffect="fade" id="modalAltSenha" width="400">
@@ -91,10 +88,11 @@
 
 
                 </b:panelGrid>
-                <p:commandButton value="Alterar Senha" ajax="true" action="#{mercadinhoController.alterarSenha(senha, nSenha, confirma)}"
+                <p:commandButton value="Alterar Senha" ajax="true" action="#{ongController.alterarSenha(senha, nSenha, confirma)}"
                                  update=":growl, :formAltSenha" oncomplete="PF('modalAltSenha').hide()"/>
                 <p:commandButton value="Cancelar" onclick="PF('modalAltSenha').hide()" type="button"/>
             </h:form>
         </p:dialog>
+
     </h:body>
 </html>

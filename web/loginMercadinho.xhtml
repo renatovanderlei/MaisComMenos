@@ -27,7 +27,7 @@
         <p:dialog id="dialLogin" draggable="false" closable="false" 
                   closeOnEscape="false" resizable="false" modal="false"
                   visible="true">
-            <b:form>
+            <b:form >
                 <b:panelGrid columns="2">
 
                     <h:outputText value="Login:"/>
@@ -72,7 +72,7 @@
                     <b:inputSecret value="#{confirma}" required="true"/>
 
                     <b:commandButton value="Cadastrar" 
-                                     action="#{mercadinhoController.inserir(confirma)}"/>
+                                     action="#{mercadinhoController.inserir(confirma)}" update=":formRegistro"/>
 
                 </b:panelGrid>
             </b:modal>
