@@ -1,6 +1,7 @@
 package com.devcaotics.controllers;
 
 import com.devcaotics.model.dao.ManagerDao;
+import com.devcaotics.model.negocio.LoteProduto;
 import com.devcaotics.model.negocio.ONG;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class ONGController {
     private ONG selection = new ONG();
     private ONG ongLogado = new ONG();
     private String modalType;
+    private int idMercadinho;
 
     @PostConstruct
     public void init() {
@@ -118,5 +120,13 @@ public class ONGController {
 
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage("Senha alterada com sucesso!"));
+    }
+    
+    public int getIdMercadinho(){
+        return idMercadinho;
+    }
+    
+    public void setIdMercadinho(LoteProduto p){
+        idMercadinho = p.getMercadinho().getId();
     }
 }

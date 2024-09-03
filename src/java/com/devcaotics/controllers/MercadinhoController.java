@@ -1,6 +1,7 @@
 package com.devcaotics.controllers;
 
 import com.devcaotics.model.dao.ManagerDao;
+import com.devcaotics.model.negocio.LoteProduto;
 import com.devcaotics.model.negocio.Mercadinho;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -109,6 +110,11 @@ public class MercadinhoController {
 
     public List<Mercadinho> readMercadinhos() {
         return ManagerDao.getCurrentInstance().readAll("select m from Mercadinho m", Mercadinho.class);
+    }
+    
+    public Mercadinho buscarMercadinho(int p) {
+        Mercadinho mercadinho = (Mercadinho) ManagerDao.getCurrentInstance().readById(p, Mercadinho.class);
+        return mercadinho;
     }
 
     // Getters e Setters
