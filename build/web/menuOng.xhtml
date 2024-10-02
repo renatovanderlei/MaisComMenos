@@ -7,6 +7,45 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>Facelet Title</title>
+        <style>
+            /* Define a cor de fundo do menu */
+            .navbar-green {
+                background-color: #28a745; /* Verde */
+            }
+
+            /* Estilo comum para todos os links do menu */
+            .navbar-green .navbar-nav > li > a,
+            .navbar-green .navbar-brand,
+            .navbar-green .dropdown-menu > li > a {
+                color: white !important;
+                background-color: #28a745; /* Verde */
+                padding: 15px 10px;
+                border-radius: 5px;
+                border: 1px solid transparent;
+                text-decoration: none;
+                font-size: 20px; /* Aumenta o tamanho da fonte dos links do menu */
+            }
+
+            /* Estilo para o link do "Home" */
+            .navbar-green .navbar-brand {
+                color: white !important;
+                font-size: 20px; /* Aumenta o tamanho da fonte do título do menu */
+            }
+
+            /* Cor ao passar o mouse pelos links */
+            .navbar-green .navbar-nav > li > a:hover,
+            .navbar-green .navbar-brand:hover,
+            .navbar-green .dropdown-menu > li > a:hover {
+                background-color: #1c7430; /* Verde mais escuro */
+                color: white !important;
+            }
+
+            /* Estilo do dropdown para manter cor verde nos itens */
+            .navbar-green .dropdown-menu {
+                background-color: #28a745; /* Verde */
+                border: none;
+            }
+        </style>
     </h:head>
     <h:body>
 
@@ -17,13 +56,13 @@
         </c:if>
         <b:growl id="growMenu" delay="4000" show-detail="true" show-summary="true"/>
         <b:form id="formMenu">
-            <b:navBar brand="Home" brandHref="indexOng.xhtml" fluid="true">
+            <b:navBar brand="Home" brandHref="indexOng.xhtml" fluid="true" styleClass="navbar-green">
                 <b:navbarLinks>
-                    <b:navLink value="Ofertas disponíveis" href="ofertas.xhtml"/>
+                    <b:navLink value="Ofertas disponíveis" href="ofertas.xhtml"  style="color: white"/>
                 </b:navbarLinks>
                
                 <b:navbarLinks pull="right">
-                    <b:dropMenu value="#{(loginController.ongLogada ne null ? loginController.ongLogada.nome : '')}">
+                    <b:dropMenu  style="color: white" value="#{(loginController.ongLogada ne null ? loginController.ongLogada.nome : '')}">
                         <b:navLink value="Meu perfil" onclick="#{ongController.setSelection(loginController.ongLogada)}" href="perfilOng.xhtml"></b:navLink>
                         <b:navLink value="Logout" onclick="location.href = 'index.xhtml';ajax:loginController.logout()"></b:navLink>
                     </b:dropMenu>

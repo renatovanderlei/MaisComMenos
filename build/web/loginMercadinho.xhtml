@@ -21,7 +21,7 @@
         <b:growl id="gro" show-summary="true" show-detail="true" delay="4000"/>
 
         <b:jumbotron>
-            <h3 style="font-family: fantasy">MenosComMais</h3>
+            <h3 style="font-family: fantasy">MaisComMenos</h3>
             <h4>Mais benefício, menos desperdício</h4>
         </b:jumbotron>
         <p:dialog id="dialLogin" draggable="false" closable="false" 
@@ -48,7 +48,8 @@
 
         <b:form id="formRegistro" enctype="multipart/form-data">
             <b:modal id="modalRegistro" class="mRegistro">
-                <b:panelGrid columns="2">
+                <p:fieldset legend="Registrar" >
+                    <b:panelGrid columns="2" colSpans="3,9">
                     
                     <h:outputText value="Nome:"/>
                     <b:inputText value="#{mercadinhoController.mercadinhoCadastro.nome}" required="true"/>
@@ -62,7 +63,7 @@
                     <h:outputText value="Endereço:"/>
                     <b:inputText value="#{mercadinhoController.mercadinhoCadastro.endereco}" required="true"/>
 
-                    <h:outputText value="Contato:"/>
+                    <h:outputText value="Telefone:"/>
                     <b:inputText value="#{mercadinhoController.mercadinhoCadastro.contato}" required="true"/>
                     
                     <h:outputText value="Senha:"/>
@@ -71,10 +72,12 @@
                     <h:outputText value="Confirmação:"/>
                     <b:inputSecret value="#{confirma}" required="true"/>
 
-                    <b:commandButton value="Cadastrar" 
-                                     action="#{mercadinhoController.inserir(confirma)}" update=":formRegistro"/>
+                    <p:commandButton value="Cadastrar" 
+                                     action="#{mercadinhoController.inserir(confirma)}"/>
 
-                </b:panelGrid>
+                </b:panelGrid><p:commandButton value="Cadastrar" 
+                                     action="#{mercadinhoController.inserir(confirma)}"/>
+                </p:fieldset>
             </b:modal>
         </b:form>
 

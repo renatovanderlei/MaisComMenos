@@ -2,6 +2,9 @@ package com.devcaotics.model.negocio;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,11 +26,8 @@ public class LoteProduto {
     @JoinColumn(name = "id_mercadinho", nullable = false)
     private Mercadinho mercadinho;
 
-    @Column(name = "categoria")
-    private String categoria;
-
-    @Column(name = "nome_produto")
-    private String nomeProduto;
+    @Column(name = "produto")
+    private String produto;
 
     @Column(name = "marca")
     private String marca;
@@ -44,15 +44,26 @@ public class LoteProduto {
     @Column(name = "validade")
     private Date validade;
 
-    @Column(name = "dias_restantes")
-    private int diasRestantes;
-
     @Column(name = "preco_final")
     private Double precoFinal;
+    
+    @Column (name = "status")
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "ong_interessada") // Verifique se o nome da coluna está correto
     private ONG ongInteressada;
+
+    // Método para calcular dias restantes
+    public int diasParaVencer() {
+        try {
+            LocalDate validade = this.validade.toLocalDate();
+            LocalDate hoje = LocalDate.now();
+            return (int) ChronoUnit.DAYS.between(hoje, validade);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 
     // Getters e Setters
     public int getId() {
@@ -69,14 +80,6 @@ public class LoteProduto {
 
     public void setMercadinho(Mercadinho mercadinho) {
         this.mercadinho = mercadinho;
-    }
-
-    public String getNomeProduto() {
-        return nomeProduto;
-    }
-
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
     }
 
     public String getMarca() {
@@ -110,11 +113,11 @@ public class LoteProduto {
     public Date getValidade() {
         return validade;
     }
-    
+
     public String getValidadeFormatada() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    sdf.setLenient(false);
-    return sdf.format(this.validade);
+        sdf.setLenient(false);
+        return sdf.format(this.validade);
     }
 
     public void setValidade(Date validade) {
@@ -133,32 +136,33 @@ public class LoteProduto {
         this.precoFinal = precoFinal;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    
     public ONG getOngInteressada() {
         return ongInteressada;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public String getProduto() {
+        return produto;
     }
 
     public String getQuantidade() {
         return quantidade;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setProduto(String produto) {
+        this.produto = produto;
     }
 
     public void setQuantidade(String quantidade) {
         this.quantidade = quantidade;
-    }
-
-    public int getDiasRestantes() {
-        return diasRestantes;
-    }
-
-    public void setDiasRestantes(int diasRestantes) {
-        this.diasRestantes = diasRestantes;
     }
 
     public void setOngInteressada(ONG ongInteressada) {

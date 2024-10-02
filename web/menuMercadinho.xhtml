@@ -7,6 +7,54 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>Facelet Title</title>
+        <style>
+            /* Define a cor de fundo do menu */
+            .navbar-purple {
+                background-color: purple;
+                box-sizing: border-box; /* Inclui padding e border no tamanho total */
+                width: 100%; /* Garante que o menu não ultrapasse a largura da tela */
+            }
+
+            /* Estilo comum para todos os links do menu */
+            .navbar-purple .navbar-nav > li > a,
+            .navbar-purple .navbar-brand,
+            .navbar-purple .dropdown-menu > li > a {
+                color: white !important;
+                background-color: purple;
+                padding: 15px 10px;
+                border-radius: 5px;
+                border: 1px solid transparent;
+                text-decoration: none;
+                font-size: 20px; /* Aumenta o tamanho da fonte dos links do menu */
+            }
+
+            /* Estilo para o link do "Home" */
+            .navbar-purple .navbar-brand {
+                color: white !important;
+                font-size: 20px; /* Aumenta o tamanho da fonte do título do menu */
+            }
+
+            /* Cor ao passar o mouse pelos links */
+            .navbar-purple .navbar-nav > li > a:hover,
+            .navbar-purple .navbar-brand:hover,
+            .navbar-purple .dropdown-menu > li > a:hover {
+                background-color: #5d005d;
+                color: white !important;
+            }
+
+            /* Estilo do dropdown para manter cor branca nos itens */
+            .navbar-purple .dropdown-menu {
+                background-color: purple;
+                border: none;
+            }
+
+            /* Estilo para o corpo da página */
+            body {
+                margin: 0;
+                padding: 0;
+                overflow-x: hidden; /* Evita rolagem horizontal */
+            }
+        </style>
     </h:head>
     <h:body>
 
@@ -17,13 +65,13 @@
         </c:if>
         <b:growl id="growMenu" delay="4000" show-detail="true" show-summary="true"/>
         <b:form id="formMenu">
-            <b:navBar brand="Home" brandHref="indexMercadinho.xhtml" fluid="true">
+            <b:navBar brand="Home" brandHref="indexMercadinho.xhtml" fluid="true" styleClass="navbar-purple">
                 <b:navbarLinks>
-                    <b:navLink value="Meus Produtos" href="produtosMercadinho.xhtml"/>
+                    <b:navLink value="Meus Produtos" href="produtosMercadinho.xhtml" style="color: white" />
                 </b:navbarLinks>
                
                 <b:navbarLinks pull="right">
-                    <b:dropMenu value="#{(loginController.mercadinhoLogado ne null ? loginController.mercadinhoLogado.nome : '')}">
+                    <b:dropMenu style="color: white" value="#{(loginController.mercadinhoLogado ne null ? loginController.mercadinhoLogado.nome : '')}">
                         <b:navLink value="Meu perfil" onclick="#{mercadinhoController.setSelection(loginController.mercadinhoLogado)}" href="perfilMercadinho.xhtml"></b:navLink>
                         <b:navLink value="Logout" onclick="location.href = 'index.xhtml';ajax:loginController.logout()"></b:navLink>
                     </b:dropMenu>

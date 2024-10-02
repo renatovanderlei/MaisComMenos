@@ -9,90 +9,210 @@
 
     <h:head>
         <title>Ofertas</title>
+        <style>
+            body {
+                background-image: url('images/meus_produtos.jpg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+        </style>
     </h:head>
     <h:body>
         <c:if test="#{loginController.ongLogada ne null}">
             <ui:include src="menuOng.xhtml" />
             <p:growl id="gro" life="4000" showSummary="true" showDetail="true" sticky="false"/>
             <h:form id="formLotes">
-                
-                <p:fieldset legend="Ofertas" style="width: 80%;margin: 0 auto">
-                    <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4">
-                        <c:forEach items="#{produtoController.readAll()}" var="produto">
-                            <c:if test="#{produto.quantidade > 0}">
-                            <p:panel header="${produto.nomeProduto}" style="text-align:center">
-                                <p:panel>
-                                    <h:outputText value="Categoria:" style="font-weight: bolder"/>
-                                    <h:outputText value=" ${produto.categoria}"/><br/>
-                                    <h:outputText value="Marca:" style="font-weight: bolder"/>
-                                    <h:outputText value=" ${produto.marca}"/><br/>
-                                    <h:outputText value="Lote:" style="font-weight: bolder"/>
-                                    <h:outputText value=" ${produto.lote}"/><br/>
-                                    <h:outputText value="Quantidade:" style="font-weight: bolder"/>
-                                    <h:outputText value=" ${produto.quantidade}"/><br/>
-                                    <h:outputText value="Preço inicial:" style="font-weight: bolder"/>
-                                    <h:outputText value=" ${produto.precoInicialFormatado}"/><br/>
-                                    <h:outputText value="Preço Final:" style="font-weight: bolder"/>
-                                    <h:outputText value=" ${produto.precoFinalFormatado}"/><br/>
-                                    <h:outputText value="validade:" style="font-weight: bolder"/>
-                                    <h:outputText value=" ${produto.validadeFormatada}"/><br/><br/>
-                                    <c:choose>
-                                        <c:when test="#{produto.diasRestantes > 2}">
-                                            <h:outputText value="Dias para vencer: #{produto.diasRestantes}" style="color: black; " />
-                                        </c:when>
-                                        <c:otherwise>
-                                
-                                            <h:outputText value="Dias para vencer: #{produto.diasRestantes}" style="color: red; font-weight: bolder"/>
-                                
-                                        </c:otherwise>
+
+                <p:fieldset legend="Ofertas" style="width: 70%;margin: 0 auto; border-width: medium; border-color: darkgreen">
+                    <p:tabView>
+                        <f:facet name="actions">
+                            Global actions
+                        </f:facet>
+                        <p:tab title="Ofertas Disponíveis">
+                            <p:selectOneMenu value="#{produtoController.loteProdutoCadastro.produto}">
+                                <f:selectItem itemLabel="Selecione" />
+                                <f:selectItems value="#{produtoController.produtosPredefinidos}" />
+                            </p:selectOneMenu>     
+                            <p:commandButton value="Filtrar" ajax="true" action="#{produtoController.setFiltroCategoria()}" update=":formLotes" style="left: 2%"/><br/><br/>
+                            <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4">
+                                <c:forEach items="#{produtoController.buscarLoteManager()}" var="loteProduto">
+                                    <c:if test="#{loteProduto.diasParaVencer() gt 0}">
+                                        <p:panel header="${loteProduto.produto} ${loteProduto.marca}" style="text-align:center;background: wheat; border-width: medium; border-color: darkgreen">
+                                            <p:panel>
+                                                <h:outputText value="Produto:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${loteProduto.produto}"/><br/>
+                                                <h:outputText value="Marca:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${loteProduto.marca}"/><br/>
+                                                <h:outputText value="Lote:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${loteProduto.lote}"/><br/>
+                                                <h:outputText value="Quantidade:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${loteProduto.quantidade}"/><br/>
+                                                <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${loteProduto.precoInicialFormatado}"/><br/>
+                                                <h:outputText value="Preço com Desconto" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${loteProduto.precoFinalFormatado}"/><br/>
+                                                <h:outputText value="validade:" style="font-weight: bolder"/>
+                                                <h:outputText value=" ${loteProduto.validadeFormatada}"/><br/><br/>
+                                                <c:choose>
+                                                    <c:when test="#{loteProduto.diasParaVencer() gt 2}">
+                                                        <h:outputText value="Dias para vencer: #{loteProduto.diasParaVencer()}" style="color: black; " />
+                                                    </c:when>
+                                                    <c:otherwise>
+
+                                                        <h:outputText value="Dias para vencer: #{loteProduto.diasParaVencer()}" style="color: red; font-weight: bolder"/>
+
+                                                    </c:otherwise>
 
 
-                                    </c:choose>
-                                    
-                                    <br/>
-                                    <h:outputText value="Fornecedor:" style="font-weight: bolder"/>
-                                    <b:commandLink value=" #{produto.mercadinho.nome}" ajax="true" action="#{ongController.setIdMercadinho(produto)}" 
-                                   oncomplete="PF('modalInfo').show()"/>
-                                        
-                                </p:panel>
-                                <p:commandButton value="Fazer pedido" ajax="true" action="#{produtoController.setarLote(produto)}" oncomplete="PF('modalPedido').show()" update=":formPedido" />
-                                <!--<p:commandButton value="deletar" oncomplete="PF('dlgCadastro').hide()" />-->
-                            </p:panel>
-                                </c:if>
-                        </c:forEach>
-                    </b:panelGrid>
+                                                </c:choose>
+
+                                                <br/>
+                                                <h:outputText value="Fornecedor:" style="font-weight: bolder"/>
+                                                <b:commandLink value=" #{loteProduto.mercadinho.nome}" ajax="true" action="#{pedidoController.setIdMercadinho(loteProduto)}" update=":formInfo" 
+                                                               oncomplete="PF('modalInfo').show()"/>
+
+                                            </p:panel><br/>
+                                            <p:commandButton value="Fazer pedido" ajax="true" action="#{pedidoController.fazerPedido(loginController.ongLogada, loteProduto)}" oncomplete="PF('modalPedido').show()" update=":formPedido" />
+                                            <!--<p:commandButton value="deletar" oncomplete="PF('dlgCadastro').hide()" />-->
+                                        </p:panel>
+                                    </c:if>
+                                </c:forEach>
+                            </b:panelGrid>
+                        </p:tab>
+                        <p:tab title="Meus Pedidos">
+                            <f:facet name="actions">
+                                Options II
+                            </f:facet>
+                            <p:tabView>
+                                <f:facet name="actions">
+                                    Global actions
+                                </f:facet>
+                                <p:tab title="Em Andamento">
+                                    <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4">
+                                        <c:forEach items="#{produtoController.readAll()}" var="loteProduto">
+                                            <c:if test="#{loteProduto.ongInteressada.id eq loginController.ongLogada.id and loteProduto.status ne 'finalizado'}">
+                                                <p:panel header="${loteProduto.produto} ${loteProduto.marca}" style="text-align:center;background: wheat; border-width: medium; border-color: darkgreen">
+                                                    <p:panel>
+                                                        <h:outputText value="Produto:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.produto}"/><br/>
+                                                        <h:outputText value="Marca:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.marca}"/><br/>
+                                                        <h:outputText value="Lote:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.lote}"/><br/>
+                                                        <h:outputText value="Quantidade:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.quantidade}"/><br/>
+                                                        <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.precoInicialFormatado}"/><br/>
+                                                        <h:outputText value="Preço com Desconto" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.precoFinalFormatado}"/><br/>
+                                                        <h:outputText value="validade:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.validadeFormatada}"/><br/><br/>
+                                                        <c:choose>
+                                                            <c:when test="#{loteProduto.diasParaVencer() > 2}">
+                                                                <h:outputText value="Dias para vencer: #{loteProduto.diasParaVencer()}" style="color: black; " />
+                                                            </c:when>
+                                                            <c:otherwise>
+
+                                                                <h:outputText value="Dias para vencer: #{loteProduto.diasParaVencer()}" style="color: red; font-weight: bolder"/>
+
+                                                            </c:otherwise>
+
+
+                                                        </c:choose>
+
+                                                        <br/>
+                                                        <h:outputText value="Fornecedor: " style="font-weight: bolder"/>
+                                                        <h:outputText value="#{loteProduto.mercadinho.nome}"/>
+
+                                                    </p:panel><br/>
+                                                    <a href="//wa.me/55#{loteProduto.mercadinho.contato}" target="_blank" > <img src="images/wapp.png" width="100"/></a>
+                                                </p:panel>
+                                            </c:if>
+                                        </c:forEach>
+                                    </b:panelGrid>
+                                </p:tab>
+                                <p:tab title="Finalizados">
+                                    <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4">
+                                        <c:forEach items="#{produtoController.readAll()}" var="loteProduto">
+                                            <c:if test="#{loteProduto.ongInteressada.id eq loginController.ongLogada.id and loteProduto.status eq 'finalizado'}">
+                                                <p:panel header="${loteProduto.produto} ${loteProduto.marca}" style="text-align:center;background: lightgray; border-width: medium; border-color: darkgreen">
+                                                    <p:panel>
+                                                        <h:outputText value="Produto:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.produto}"/><br/>
+                                                        <h:outputText value="Marca:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.marca}"/><br/>
+                                                        <h:outputText value="Lote:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.lote}"/><br/>
+                                                        <h:outputText value="Quantidade:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.quantidade}"/><br/>
+                                                        <h:outputText value="Preço de Venda:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.precoInicialFormatado}"/><br/>
+                                                        <h:outputText value="Preço com Desconto" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.precoFinalFormatado}"/><br/>
+                                                        <h:outputText value="validade:" style="font-weight: bolder"/>
+                                                        <h:outputText value=" ${loteProduto.validadeFormatada}"/><br/><br/>
+                                                        <br/>
+                                                        <h:outputText value="Fornecedor: " style="font-weight: bolder"/>
+                                                        <h:outputText value="#{loteProduto.mercadinho.nome}"/><br/><br/>
+                                                        <h:outputText value="Transação Finalizada" style="color: green; font-weight: bolder"/><br/><br/>
+                                                    </p:panel><br/>
+
+                                                </p:panel>
+                                            </c:if>
+                                        </c:forEach>
+                                    </b:panelGrid>
+                                </p:tab>
+                            </p:tabView>
+                        </p:tab> 
+                    </p:tabView>
                 </p:fieldset>
-                
-        
+
+
             </h:form>
-            
+
         </c:if>
-        
+
         <p:dialog header="Dados do Fornecedor" widgetVar="modalInfo" modal="true" showEffect="fade"
                   hideEffect="fade" id="modalInfo" width="400">
             <h:form id="formInfo">
-                <c:set var = "mercadinho" scope = "session" value = "#{mercadinhoController.buscarMercadinho(ongController.idMercadinho)}" /> 
+                <c:set var = "mercadinho" scope = "session" value = "#{mercadinhoController.buscarMercadinho(pedidoController.idMercadinho)}" /> 
+                <b:panelGrid columns="1">
+                    <h:outputText value="Nome: #{mercadinho.nome}"/><br/>
+                    <h:outputText value="Endereço: #{mercadinho.endereco}"/><br/><br/>
+                </b:panelGrid>
+                <p:commandButton value="Fechar" onclick="PF('modalInfo').hide()" type="button"/>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Pedido Realizado" widgetVar="modalPedido" modal="true" showEffect="fade"
+                  hideEffect="fade" id="modalPedido" width="400">
+            <h:form id="formPedido">
+
+                <c:set var = "mercadinho" scope = "session" value = "#{mercadinhoController.buscarMercadinho(pedidoController.idMercadinho)}" /> 
+                <h:outputText value="Entre em contato com o #{mercadinho.nome} para concluir a compra."/>
+                <b:panelGrid columns="2">
+
+                </b:panelGrid>
+                <p:commandButton value="Contato" ajax="true" 
+                                 update=":gro :formPedido :formLotes" oncomplete="PF('modalPedido').hide()"></p:commandButton>
+                <p:commandButton value="Fechar" ajax="true" 
+                                 update=":gro :formPedido :formLotes" oncomplete="PF('modalPedido').hide()"/>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Contato" widgetVar="modalContato" modal="true" showEffect="fade"
+                  hideEffect="fade" id="modalContato" width="400">
+            <h:form id="formContato">
+                <c:set var = "mercadinho" scope = "session" value = "#{mercadinhoController.buscarMercadinho(pedidoController.idMercadinho)}" /> 
                 <b:panelGrid columns="2">
                     <h:outputText value="Nome: #{mercadinho.nome}"/><br/>
                     <h:outputText value="Endereço: #{mercadinho.endereco}"/><br/>
                     <h:outputText value="Contato: #{mercadinho.contato}"/><br/><br/>
-                    </b:panelGrid>
-                <p:commandButton value="Alterar Senha" ajax="true" 
+                </b:panelGrid>
+                <p:commandButton value="Enviar" ajax="true" 
                                  update=":gro, :formInfo" oncomplete="PF('modalInfo').hide()"/>
-                <p:commandButton value="Cancelar" onclick="PF('modalInfo').hide()" type="button"/>
-            </h:form>
-        </p:dialog>
-        
-        <p:dialog header="PEdido Realizado" widgetVar="modalPedido" modal="true" showEffect="fade"
-                  hideEffect="fade" id="modalPedido" width="400">
-            <h:form id="formPedido">
-                <c:set var = "mercadinho" scope = "session" value = "#{mercadinhoController.buscarMercadinho(ongController.idMercadinho)}" /> 
-                <b:panelGrid columns="2">
-                    
-                    </b:panelGrid>
-                <p:commandButton value="Alterar Senha" ajax="true" 
-                                 update=":gro, :formPedido" oncomplete="PF('modalPedido').hide()"/>
-                <p:commandButton value="Cancelar" onclick="PF('modalPedido').hide()" type="button"/>
+                <p:commandButton value="Fechar" onclick="PF('modalContato').hide()" type="button"/>
             </h:form>
         </p:dialog>
 

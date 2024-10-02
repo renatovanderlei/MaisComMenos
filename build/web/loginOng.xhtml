@@ -21,7 +21,7 @@
         <b:growl id="gro" show-summary="true" show-detail="true" delay="4000"/>
 
         <b:jumbotron >
-            <h3 style="font-family: fantasy">MenosComMais</h3>
+            <h3 style="font-family: fantasy">MaisComMenos</h3>
             <h4>Otimize as compras das suas campanhas!</h4>
         </b:jumbotron>
         <p:dialog id="dialLogin" draggable="false" closable="false" 
@@ -48,7 +48,8 @@
 
         <b:form id="formRegistro" enctype="multipart/form-data">
             <b:modal id="modalRegistro" class="mRegistro">
-                <b:panelGrid columns="2">
+                <p:fieldset legend="Registrar" style="border-width: medium; border-color: darkgreen">
+                <b:panelGrid columns="2" colSpans="3,9">
 
                     <h:outputText value="Nome:"/>
                     <b:inputText value="#{ongController.ongCadastro.nome}" required="true"/>
@@ -68,14 +69,15 @@
                     <h:outputText value="Confirmação:"/>
                     <b:inputSecret value="#{confirma}" required="true"/>
 
-                    <b:commandButton value="Cadastrar" 
+                    <p:commandButton value="Cadastrar" 
                                      action="#{ongController.inserir(confirma)}"/>
                    
                 </b:panelGrid>
+                </p:fieldset>
             </b:modal>
         </b:form>
 
-        <img src="images/OngIndex.png" width="1000"/>
+        <img src="images/Ong.jpg" width="1000"/>
     </h:body>
 </html>
 

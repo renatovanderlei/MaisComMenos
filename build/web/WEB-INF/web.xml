@@ -30,4 +30,15 @@
         <param-name>primefaces.THEME</param-name>
         <param-value>south-street</param-value>
     </context-param>
+    <dependency>
+    <groupId>org.primefaces</groupId>
+    <artifactId>primefaces</artifactId>
+    <version>${primefaces.version}</version>
+    <classifier>push</classifier>
+</dependency>
+<dependency>
+    <groupId>org.atmosphere</groupId>
+    <artifactId>atmosphere-runtime</artifactId>
+    <version>2.4.30-javascript</version>
+</dependency>
 </web-app>

@@ -36,7 +36,7 @@ public class MercadinhoController {
     public void inserir(String confirma) {
         FacesContext context = FacesContext.getCurrentInstance();
         String cnpjRegex = "\\d{14}";
-        String contatoRegex = "\\d{11}";
+        String contatoRegex = "\\d{10,11}";
 
         boolean valid = true;
 
@@ -54,7 +54,7 @@ public class MercadinhoController {
 
         if (!Pattern.matches(contatoRegex, mercadinhoCadastro.getContato())) {
             context.addMessage("formCadMercadinho:contato", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Contato inválido", "O contato deve conter 11 dígitos."));
+                    "Contato inválido", "O contato deve conter 10 ou 11 dígitos."));
             valid = false;
         }
 

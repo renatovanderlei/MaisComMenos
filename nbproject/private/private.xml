@@ -3,12 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/User/Desktop/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/ofertas.xhtml</file>
-            <file>file:/C:/Users/User/Desktop/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/controllers/ONGController.java</file>
-            <file>file:/C:/Users/User/Desktop/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/controllers/MercadinhoController.java</file>
-            <file>file:/C:/Users/User/Desktop/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/model/dao/ManagerDao.java</file>
-            <file>file:/C:/Users/User/Desktop/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/controllers/ProdutoController.java</file>
-            <file>file:/C:/Users/User/Desktop/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/model/negocio/LoteProduto.java</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/perfilOng.xhtml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/controllers/MercadinhoController.java</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/controllers/LoginController.java</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/ofertas.xhtml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/conf/persistence.xml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/controllers/PedidoController.java</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/menuOng.xhtml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/controllers/ProdutoController.java</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/perfilMercadinho.xhtml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/model/dao/ManagerDao.java</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/produtosMercadinho.xhtml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/menuMercadinho.xhtml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/loginMercadinho.xhtml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/index.xhtml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/controllers/ONGController.java</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/web/loginOng.xhtml</file>
+            <file>file:/D:/NetBeans_JavaSE_Portable/Projetos/MaisComMenos/src/java/com/devcaotics/model/negocio/LoteProduto.java</file>
         </group>
     </open-files>
 </project-private>

@@ -8,24 +8,28 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Facelet Title</title>
+        <style>
+            body {
+                background-image: url('images/meus_produtos.jpg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+        </style>
     </h:head>
     <h:body>
         <ui:include src="menuMercadinho.xhtml"/>
 
         <b:form id="formPet" enctype="multipart/form-data" style="width: 50%;margin: 0 auto">
 
-            <p:fieldset legend="Cadastrar Novo Produto" style="width: 80%;margin: 0 auto" >
+            <p:fieldset legend="Cadastrar Novo Produto" style="width: 80%;margin: 0 auto; border-width: medium; border-color: darkgreen" >
                 <b:panelGrid columns="3">
 
                     <b:panelGrid columns="1">
-                        <h:outputText value="Nome"/>
-                        <b:inputText value="#{produtoController.loteProdutoCadastro.nomeProduto}"/>                        
-                    </b:panelGrid>
-                    <b:panelGrid columns="1">
-                        <h:outputText value="Categoria:" />
-                        <p:selectOneMenu value="#{produtoController.loteProdutoCadastro.categoria}">
+                        <h:outputText value="Produto:" />
+                        <p:selectOneMenu value="#{produtoController.loteProdutoCadastro.produto}">
                             <f:selectItem itemLabel="Selecione" />
-                            <f:selectItems value="#{produtoController.categoriasPredefinidas}" />
+                            <f:selectItems value="#{produtoController.produtosPredefinidos}" />
                         </p:selectOneMenu>
                     </b:panelGrid>
                     <b:panelGrid columns="1">
@@ -41,22 +45,28 @@
                         <b:inputText value="#{produtoController.loteProdutoCadastro.quantidade}"/>                        
                     </b:panelGrid>
                     <b:panelGrid columns="1">
-                        <h:outputText value="Preço Inicial"/>
+                        <h:outputText value="Preço de venda"/>
                         <b:inputText value="#{produtoController.loteProdutoCadastro.precoInicial}"/>                        
                     </b:panelGrid>
                     <b:panelGrid columns="1">
-                        <h:outputText value="Preço Final"/>
+                        <h:outputText value="Preço com Desconto"/>
                         <b:inputText value="#{produtoController.loteProdutoCadastro.precoFinal}"/>                        
+                    </b:panelGrid>
+                    <b:panelGrid columns="1">
+
                     </b:panelGrid>
                     <b:panelGrid columns="1">
                         <b:inputText value="#{produtoController.validadeString}" 
                                      p:type="date" 
-                         required="true" id="validade" label="Data de validade"/>                        
+                                     required="true" id="validade" label="Data de validade"/>                        
                     </b:panelGrid>
 
                 </b:panelGrid>
-
-                <p:commandButton value="inserir Produto" action="#{produtoController.inserir()}" oncomplete="location.href = 'produtosMercadinho.xhtml'"/>
+                <b:panelGrid columns="2" style="width: 65%;margin: 0 auto">
+                    <p:commandButton value="inserir Produto" action="#{produtoController.inserir()}" oncomplete="location.href = 'produtosMercadinho.xhtml'"/>
+                    <p:commandButton value="Cancelar" onclick="location.href = 'produtosMercadinho.xhtml'"/>
+                </b:panelGrid>
+                
 
             </p:fieldset>
 

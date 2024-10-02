@@ -5,6 +5,7 @@ import com.devcaotics.model.negocio.LoteProduto;
 import com.devcaotics.model.negocio.ONG;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -34,8 +35,21 @@ public class ONGController {
     }
 
     public void inserir(String confirma) {
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        String contatoRegex = "\\d{10,11}";
+        
+        boolean valid = true;
+        
+        
         List<ONG> u = ManagerDao.getCurrentInstance()
                 .readAll("select o from ONG o where o.login='" + ongCadastro.getLogin() + "'", ONG.class);
+        
+        if (!Pattern.matches(contatoRegex, ongCadastro.getContato())) {
+            context.addMessage("formCadOng:contato", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Contato inválido", "O contato deve conter 10 ou 11 dígitos."));
+            valid = false;
+        }
 
         if (u.isEmpty()) {
             if (!this.ongCadastro.getSenha().equals("") && !confirma.equals("")) {

@@ -29,10 +29,13 @@ public class ProdutoController implements Serializable {
     private LoteProduto loteProdutoCadastro;
     private LoteProduto loteProdutoSelecionado;
     private List<LoteProduto> lotesProdutos;
-    private List<String> categoriasPredefinidas;
+    private List<String> produtosPredefinidos;
+    
     private String validadeString; // Usado para receber a validade como string
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private String filtroCategoria = "";
+    private String filtroProduto = "";
+    
+    PedidoController pedidoCOntroller = PedidoController.getCurrentInstance();
 
     @PostConstruct
     public void init() {
@@ -40,11 +43,11 @@ public class ProdutoController implements Serializable {
         this.loteProdutoSelecionado = new LoteProduto();
         //this.lotesProdutos = carregarLotesProdutos();
         this.validadeString = "";
-        categoriasPredefinidas = Arrays.asList("Cereais", "Massas", "Feijão", "Carne vermelha", "Frango", "Peixe", "Laticínios", "Frutas", "Verduras", "Molhos", "Temperos", "Doces");
+        produtosPredefinidos = Arrays.asList("Feijão", "Macarrão", "Arroz", "Carne vermelha", "Frango", "Peixe", "Leite em pó", "Frutas", "Verduras", "Molho", "Temperos", "Doces");
     }
 
-    public List<String> getCategoriasPredefinidas() {
-        return categoriasPredefinidas;
+    public List<String> getProdutosPredefinidos() {
+        return produtosPredefinidos;
     }
 
     private Mercadinho getMercadinhoLogado() {
@@ -81,6 +84,11 @@ public class ProdutoController implements Serializable {
                 .readAll("select l from LoteProduto l", LoteProduto.class);
     }
     
+    public List<LoteProduto> readAllDisponiveis() {
+        return ManagerDao.getCurrentInstance()
+                .readAll("select l from LoteProduto l where l.ongInteressada=null", LoteProduto.class);
+    }
+    
     
 
 //    public void inserir() {
@@ -115,10 +123,10 @@ public class ProdutoController implements Serializable {
                 LocalDate validadeLocal = LocalDate.parse(validadeString, formatter);
                 LocalDate hoje = LocalDate.now();
                 int diasRestantes = (int) ChronoUnit.DAYS.between(hoje, validadeLocal);
-                loteProdutoCadastro.setDiasRestantes(diasRestantes);
             }
 
             loteProdutoCadastro.setMercadinho(getMercadinhoLogado());
+            loteProdutoCadastro.setStatus("pendente");
             ManagerDao.getCurrentInstance().insert(loteProdutoCadastro);
             lotesProdutos = carregarLotesProdutos();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Produto cadastrado com sucesso!"));
@@ -160,7 +168,6 @@ public class ProdutoController implements Serializable {
                 LocalDate validadeLocal = LocalDate.parse(validadeString, formatter);
                 LocalDate hoje = LocalDate.now();
                 int diasRestantes = (int) ChronoUnit.DAYS.between(hoje, validadeLocal);
-                loteProdutoSelecionado.setDiasRestantes(diasRestantes);
             }
 
             ManagerDao.getCurrentInstance().update(loteProdutoSelecionado);
@@ -170,6 +177,17 @@ public class ProdutoController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Data de validade inválida."));
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao atualizar produto."));
+        }
+    }
+    
+    public void alterarStatus() {
+        try {
+            loteProdutoSelecionado.setStatus("finalizado");
+            ManagerDao.getCurrentInstance().update(loteProdutoSelecionado);
+            lotesProdutos = carregarLotesProdutos();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Transação finalizada com sucesso!"));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao alterar status do produto."));
         }
     }
 
@@ -192,6 +210,25 @@ public class ProdutoController implements Serializable {
         return lotesProdutos;
 
     }
+    
+    public List<LoteProduto> readFiltroProduto(String produto){
+        return ManagerDao.getCurrentInstance().readAll("select p from LoteProduto p where p.produto='"+produto+"' and p.ongInteressada=null", LoteProduto.class);
+    }
+    
+    public List<LoteProduto> buscarLoteManager(){
+        if(filtroProduto.equals("")){
+            return readAllDisponiveis();
+        }else{
+            List<LoteProduto> lotes = readFiltroProduto(filtroProduto);
+            
+            for(int i=0;i<lotes.size();i++){
+                if(lotes.get(i).getOngInteressada() != null){
+                    lotes.remove(i);
+                }
+            }
+            return lotes;
+        }
+    }
 
 //    public void setLoteProdutoSelecionado(LoteProduto loteProdutoSelecionado) {
 //        this.loteProdutoSelecionado = loteProdutoSelecionado;
@@ -207,7 +244,6 @@ public class ProdutoController implements Serializable {
             LocalDate validadeLocal = LocalDate.parse(this.validadeString, formatter);
             LocalDate hoje = LocalDate.now();
             int diasRestantes = (int) ChronoUnit.DAYS.between(hoje, validadeLocal);
-            loteProdutoSelecionado.setDiasRestantes(diasRestantes);
         }
     }
 
@@ -223,7 +259,7 @@ public class ProdutoController implements Serializable {
             }
         }
 
-        System.out.println("setou lote atual " + loteProdutoSelecionado.getNomeProduto());
+        System.out.println("setou lote atual " + loteProdutoSelecionado.getProduto());
         return p;
     }
 
@@ -242,6 +278,14 @@ public class ProdutoController implements Serializable {
             return 0;
         }
     }
+    
+    public void inserirOng(){
+        loteProdutoSelecionado = ManagerDao.getCurrentInstance().readById(pedidoCOntroller.getProdutoEscolhido().getId(), LoteProduto.class);
+        loteProdutoSelecionado.setOngInteressada(pedidoCOntroller.getOng());
+        
+        alterar();
+    }
+    
 
     // Getters e Setters
     public LoteProduto getLoteProdutoCadastro() {
@@ -273,11 +317,11 @@ public class ProdutoController implements Serializable {
     }
     
     public void setFiltroCategoria(){
-        this.filtroCategoria = loteProdutoCadastro.getCategoria();
+        this.filtroProduto = loteProdutoCadastro.getProduto();
     }
     
-    public String getFiltroCategoria(){
-        return this.loteProdutoCadastro.getCategoria();
+    public String getFiltroProduto(){
+        return this.loteProdutoCadastro.getProduto();
     }
     
 }
